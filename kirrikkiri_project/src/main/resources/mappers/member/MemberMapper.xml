@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.boot.backendMiniProject.dao.IMemberDAO">
+  
+  <resultMap  id="memResult" type="com.boot.backendMiniProject.model.MemberVO">
+  			<result property="memId" column="memId" />
+  			<result property="memPwd" column="memPwd" />
+  			<result property="memName" column="memName" />
+  			<result property="memEmail" column="memEmail" />
+  			<result property="memJoinDate" column="memJoinDate" />
+  			<result property="memMbti" column="memMbti" />
+  			<result property="memHp" column="memHp" />
+  			<result property="memZipcode" column="memZipcode" />
+  			<result property="memAddress1" column="memAddress1" />
+  			<result property="memAddress2" column="memAddress2" />	
+  		</resultMap> 
+  
+	  <!-- 로그인 -->
+		<select id="loginCheck" parameterType="hashmap" resultType="com.boot.backendMiniProject.model.MemberVO">
+			SELECT memId FROM member WHERE memId=#{id} and memPwd=#{pwd}
+		</select>
+		
+		<!-- ID 중복 확인 -->
+		<select id="memIdCheck" resultType="string" parameterType="string">
+			SELECT memId FROM member WHERE memId =#{memId}
+		</select>
+		
+		<!-- Email 중복 확인 -->
+		<select id="memEmailCheck" resultType="string" parameterType="string">
+			SELECT memEmail FROM member WHERE memEmail = #{email}
+		</select>
+		
+		<!-- 회원가입 -->
+		<insert id="memJoin" parameterType="com.boot.backendMiniProject.model.MemberVO">
+			INSERT INTO member(memId, memPwd, memName, memEmail, memJoinDate, memMbti, memHp, memZipcode, memAddress1, memAddress2)
+			VALUES (#{memId}, #{memPwd}, #{memName}, #{memEmail}, default, #{memMbti}, #{memHp}, #{memZipcode}, #{memAddress1}, #{memAddress2})
+		</insert>
+		
+		<!-- 전체 상품 조회 -->
+ 		<select id="listAllProfile" resultMap="memResult">
+ 			SELECT * FROM member ORDER BY memId
+ 		</select>
+		
+		<!-- 상품 상세 정보 조회  -->
+ 		<select id="profileInfo" parameterType="string" resultType="com.boot.backendMiniProject.model.MemberVO">
+ 			SELECT * FROM member WHERE memId=#{memId}  		
+ 		</select>
+ 		
+ 		<!-- 상품 정보 수정 : 수정된 정보 DB에 저장 (상품번호는 수정 안 함 : 기본키 변경 안 함) -->
+		<update id="updateProfile" parameterType="com.boot.backendMiniProject.model.MemberVO">
+ 			UPDATE member
+ 			SET memId=#{memId}, memPwd=#{memPwd}, memName=#{memName}, memEmail=#{memEmail}, memMbti=#{memMbti}, memHp=#{memHp}, memZipcode=#{memZipcode}, memAddress1=#{memAddress1},, memAddress2=#{memAddress2} 
+ 			WHERE memId=#{memId}
+ 		</update>
+  </mapper>
